@@ -20,22 +20,16 @@ module.exports = async function (context, myTimer) {
        
     // execute TagUi script
     var tg = shell.exec('/home/data/node_modules/tagui/src/tagui /home/data/scripts/wiki.js -h');
-    // see the TagUi logging
+    // see the TagUI logs
     context.log(tg);
-
-    // make filename
-    var timeStamp = new Date().toISOString().substring(0, 10);
-    var filename = timeStamp + 'wiki_table.csv'
     
     // upload SCV file
     var blobSvc = azure.createBlobService();
-    blobSvc.createBlockBlobFromLocalFile('marketbasket', filename, '/home/data/wiki_table.csv', function(error, result, response){
+    blobSvc.createBlockBlobFromLocalFile('mycontainer', 'wiki_table.csv', '/home/data/wiki_table.csv', function(error, result, response){
         if(!error){
           context.log('File successfully uploaded to Blob Storage');
           // clean up
           shell.exec('rm -r /home/data/wiki_table.csv');
         }
       });
-
-    context.log('JavaScript timer trigger function ran!', timeStamp);   
 };
